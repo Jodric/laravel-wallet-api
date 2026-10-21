@@ -1,0 +1,38 @@
+# Stack de PRODUCTION
+# Lancer avec : docker compose -f docker-compose.prod.yml -p wallet-prod <commande>
+# Différences avec le dev : code figé dans les images, pas de phpMyAdmin,
+# base non exposée, secrets dans .env.prod (jamais dans Git), redémarrage automatique.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/prod/Dockerfile
+      target: app
+    image: wallet-api-app:1.0
+    env_file: .env.prod
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/prod/Dockerfile
+      target: web
+    image: wallet-api-web:1.0
+    ports:
+      - "8090:80"          # 8090 pour ne pas gêner la stack de dev (8080)
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    env_file: .env.prod
+    volumes:
+      - dbdata_prod:/var/lib/mysql
+    restart: unless-stopped
+    # Pas de "ports" : la base n'est joignable QUE par les autres conteneurs
+
+volumes:
+  dbdata_prod:

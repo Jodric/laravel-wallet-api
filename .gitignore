@@ -1,0 +1,3 @@
+
+# Secrets de production : jamais dans Git
+.env.prod
