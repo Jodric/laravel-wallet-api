@@ -1,0 +1,63 @@
+### Requêtes de test - à ouvrir dans VS Code avec l'extension "REST Client" (cliquer sur "Send Request")
+@base = http://localhost:8080/api
+
+### Liste des comptes
+GET {{base}}/accounts
+Accept: application/json
+
+### Créer un compte
+POST {{base}}/accounts
+Accept: application/json
+Content-Type: application/json
+
+{ "holder_name": "Jodrick", "iban": "LU280019400644750000" }
+
+### Créditer le compte 2 de 12,50 EUR (montants en centimes)
+POST {{base}}/accounts/2/transactions
+Accept: application/json
+Content-Type: application/json
+
+{ "type": "credit", "amount": 1250, "reference": "REF-001" }
+
+### Renvoyer EXACTEMENT la même requête : 200 au lieu de 201, pas de double crédit (idempotence)
+POST {{base}}/accounts/2/transactions
+Accept: application/json
+Content-Type: application/json
+
+{ "type": "credit", "amount": 1250, "reference": "REF-001" }
+
+### Débit trop grand : 422 "Solde insuffisant."
+POST {{base}}/accounts/2/transactions
+Accept: application/json
+Content-Type: application/json
+
+{ "type": "debit", "amount": 999999, "reference": "REF-002" }
+
+### Virement de 30 EUR du compte 1 vers le compte 2
+POST {{base}}/transfers
+Accept: application/json
+Content-Type: application/json
+
+{ "from_account_id": 1, "to_account_id": 2, "amount": 3000, "reference": "TR-001" }
+
+### Historique du compte 2
+GET {{base}}/accounts/2/transactions
+Accept: application/json
+
+
+### Tentative de suppression
+DELETE {{base}}/accounts/2
+Accept: application/json
+
+
+### Tentative de triche
+POST {{base}}/accounts/1/transactions
+Accept: application/json
+Content-Type: application/json
+
+{ "type": "credit", "amount": 100, "reference": "TRICHE-1", "balance_after": 99999999 }
+
+
+### resumé du compte
+GET {{base}}/accounts/2/summary
+Accept: application/json
