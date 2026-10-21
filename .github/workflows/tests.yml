@@ -1,0 +1,32 @@
+name: Tests
+
+on:                          # QUAND le robot se déclenche
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest   # une machine Linux neuve, créée pour l'occasion
+    defaults:
+      run:
+        working-directory: src   # toutes les commandes s'exécutent dans src/
+    steps:
+      - uses: actions/checkout@v4          # 1. récupère le code du dépôt
+
+      - uses: shivammathur/setup-php@v2    # 2. installe PHP
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite, bcmath, intl
+          coverage: none
+
+      - name: Installer les dépendances    # 3. recrée vendor/ (absent du dépôt)
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Préparer l'environnement     # 4. recrée .env (absent du dépôt)
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Lancer les tests             # 5. si un test échoue, la CI est rouge
+        run: php artisan test
