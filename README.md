@@ -10,7 +10,6 @@ Projet d'entraînement pour pratiquer Docker, Laravel, MySQL et les tests automa
 | `docker-compose.yml` | Décrit les 3 conteneurs : `app` (PHP 8.4), `web` (Nginx), `db` (MySQL 8.4) |
 | `docker/php/Dockerfile` | Recette de l'image PHP : extensions + Composer |
 | `docker/nginx/default.conf` | Nginx envoie les fichiers `.php` à PHP-FPM (`app:9000`) |
-| `solution/` | Le code Laravel à ajouter (modèles, service, contrôleurs, tests). **Testé : 12 tests verts.** |
 | `src/` | Créé à l'étape 2 : le projet Laravel |
 
 ## Lancer le projet (PowerShell, dans ce dossier)
@@ -123,4 +122,4 @@ docker compose down -v               # supprimer aussi le volume = base de donn�
 | `Project directory is not empty` à l'étape 2 | Le dossier `src` contient déjà des fichiers | Supprime `src` et relance l'étape 2 |
 | `docker: command not found` / daemon pas joignable | Docker Desktop n'est pas lancé | Ouvre Docker Desktop et attends « Engine running » |
 
-Vérifié le 15/10/2026 : stack complète lancée sous Docker, migrations MySQL OK, 12 tests verts, API testée (201, 200, 404, 422).
+Stack complète lancée sous Docker, migrations MySQL OK, 12 tests verts, API testée (201, 200, 404, 422).
