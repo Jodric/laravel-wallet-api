@@ -16,7 +16,7 @@ class TransactionApiTest extends TestCase
 
         $this->postJson("/api/accounts/{$account->id}/transactions", [
             'type' => 'credit', 'amount' => 250, 'reference' => 'REF-1',
-        ])->assertCreated()->assertJsonPath('data.balance_after', 9999);
+        ])->assertCreated()->assertJsonPath('data.balance_after', 1250);
 
         $this->assertSame(1250, $account->fresh()->balance);
     }
